@@ -112,7 +112,7 @@ drawFrame();
   }
 
   /*
-  This function changes the error function used (MSE or MAE) according to type (0 => )
+  This function changes the error function used (MSE or MAE) according to type (0 => MSE, 1 => MAE)
   */
   function changeErrorFunction(type){
     if (type!=errorFunction){
@@ -121,6 +121,9 @@ drawFrame();
     }
   }
 
+  /*
+
+  */
   function updateWeightSpace(){
     drawHeatMap(3);
     var dst = cv.imread("canvas");
@@ -131,6 +134,7 @@ drawFrame();
     cv.GaussianBlur(src, dst, ksize, 0, 0, cv.BORDER_DEFAULT);
     errorImageData = new ImageData(new Uint8ClampedArray(dst.data, dst.cols, dst.rows),500);
   }
+
   function calculateError(params,points){
     var totalError = 0;
     for(var i = 0; i < points.length; i++){
@@ -308,9 +312,9 @@ canvas.addEventListener("mousedown", handleMouseDown, false);
 document.addEventListener("mouseup", handleMouseUp, false);
 canvas.addEventListener("mousemove",moveCursor,false);
 
-canvas.addEventListener("ontouchstart", handleMouseDown, false);
-document.addEventListener("ontouchend", handleMouseUp, false);
-canvas.addEventListener("ontouchmove",moveCursor,false);
+canvas.addEventListener("touchstart", handleMouseDown, false);
+document.addEventListener("touchend", handleMouseUp, false);
+canvas.addEventListener("touchmove",moveCursor,false);
 
 function drawCursor(x,y){
   drawPoint(x,y,cursor_radius,"black");
