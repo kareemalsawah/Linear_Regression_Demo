@@ -235,7 +235,7 @@ drawFrame();
 
 
   function moveCursor(event){
-    if (mouse_is_down){
+    if (mouse_is_down||true){
       var totalOffsetX = 0;
       var totalOffsetY = 0;
       var canvasX = 0;
@@ -309,12 +309,12 @@ function handleMouseUp(event){
   mouse_is_down = false;
 }
 canvas.addEventListener("mousedown", handleMouseDown, false);
-document.addEventListener("mouseup", handleMouseUp, false);
 canvas.addEventListener("mousemove",moveCursor,false);
+document.addEventListener("mouseup", handleMouseUp, false);
 
 canvas.addEventListener("touchstart", handleMouseDown, false);
-document.addEventListener("touchend", handleMouseUp, false);
 canvas.addEventListener("touchmove",moveCursor,false);
+document.addEventListener("touchend", handleMouseUp, false);
 
 function drawCursor(x,y){
   drawPoint(x,y,cursor_radius,"black");
