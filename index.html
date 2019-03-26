@@ -235,7 +235,7 @@ drawFrame();
 
 
   function moveCursor(event){
-    if (mouse_is_down||true){
+    if (mouse_is_down){
       var totalOffsetX = 0;
       var totalOffsetY = 0;
       var canvasX = 0;
@@ -311,6 +311,85 @@ function handleMouseUp(event){
 canvas.addEventListener("mousedown", handleMouseDown, false);
 canvas.addEventListener("mousemove",moveCursor,false);
 document.addEventListener("mouseup", handleMouseUp, false);
+
+
+function moveCursorTouch(event){
+  if (touch_is_down){
+    var totalOffsetX = 0;
+    var totalOffsetY = 0;
+    var canvasX = 0;
+    var canvasY = 0;
+    var currentElement = this;
+
+    do{
+        totalOffsetX += currentElement.offsetLeft - currentElement.scrollLeft;
+        totalOffsetY += currentElement.offsetTop - currentElement.scrollTop;
+    }
+    while(currentElement = currentElement.offsetParent)
+
+    canvasX = event.pageX - totalOffsetX;
+    canvasY = event.pageY - totalOffsetY;
+
+    var positionInfo = canvas.getBoundingClientRect();
+    var height = positionInfo.height;
+    var width = positionInfo.width;
+    canvasX *= canvas.width/width;
+    canvasY *= canvas.height/height;
+    if(canvasX>canvas.width/2+seperator_width/2+cursor_radius){
+      line_params[0] = map(canvasX,500,1000,-weight_1_space_scale,weight_1_space_scale);
+      line_params[1] = map(canvasY,0,500,-weight_2_space_scale,weight_2_space_scale);
+      drawFrame();
+      drawCursor(canvasX,canvasY);
+      cursor_position = [canvasX,canvasY];
+    }
+  }
+  event.preventDefault();
+}
+
+var touch_is_down = false;
+function handleTouchDown(event){
+touch_is_down = true;
+var totalOffsetX = 0;
+var totalOffsetY = 0;
+var canvasX = 0;
+var canvasY = 0;
+var currentElement = this;
+
+do{
+    totalOffsetX += currentElement.offsetLeft - currentElement.scrollLeft;
+    totalOffsetY += currentElement.offsetTop - currentElement.scrollTop;
+}
+while(currentElement = currentElement.offsetParent)
+
+canvasX = event.pageX - totalOffsetX;
+canvasY = event.pageY - totalOffsetY;
+
+var positionInfo = canvas.getBoundingClientRect();
+var height = positionInfo.height;
+var width = positionInfo.width;
+canvasX *= canvas.width/width;
+canvasY *= canvas.height/height;
+if(canvasX>canvas.width/2+seperator_width/2+cursor_radius){
+  line_params[0] = map(canvasX,500,1000,-weight_1_space_scale,weight_1_space_scale);
+  line_params[1] = map(canvasY,0,500,-weight_2_space_scale,weight_2_space_scale);
+  drawFrame();
+  drawCursor(canvasX,canvasY);
+  cursor_position = [canvasX,canvasY];
+}else{
+  var point_position = [0,0];
+  point_position[0] = map(canvasX,0,500,-canvas_width_scale,canvas_width_scale);
+  point_position[1] = map(canvasY,500,0,-canvas_height_scale,canvas_height_scale);
+  points_arr.push(point_position);
+  updateWeightSpace();
+  drawFrame();
+  drawCursor(cursor_position[0],cursor_position[1]);
+}
+event.preventDefault();
+}
+
+function handleTouchUp(event){
+touch_is_down = false;
+}
 
 canvas.addEventListener("touchstart", handleMouseDown, false);
 canvas.addEventListener("touchmove",moveCursor,false);
