@@ -74,10 +74,10 @@
   canvas.height = canvas.width*heightRatio;
   var ctx = canvas.getContext("2d");
 
-  var cursor_position = [800,300];
+  var cursor_position = [750,250];
   var seperator_width = 3;
   var cursor_radius = 5;
-  var points_arr = [[5,10]];
+  var points_arr = [];
   var canvas_width_scale = 30;
   var canvas_height_scale = 30;
   var line_params = [1,0];
@@ -85,6 +85,20 @@
   var weight_1_space_scale = 10;
   var weight_2_space_scale = 100;
   var errorFunction = 0;
+
+  function generateInitialPoints(){
+    var m = 1;
+    var b = 2;
+    var generated = [];
+    for(var i = 0; i < 15; i++){
+      var x = Math.random()*50 - 25;
+      var y = m*x + b + Math.random()*8 - 4;
+      generated.push([x,y]);
+    }
+    return generated;
+  }
+
+  points_arr = generateInitialPoints();
 
 
 updateWeightSpace();
@@ -123,6 +137,7 @@ drawFrame();
     if (type!=errorFunction){
       errorFunction = type;
       updateWeightSpace();
+      drawFrame();
     }
   }
 
@@ -172,6 +187,7 @@ drawFrame();
     ctx.putImageData(errorImageData, 500, 0);
     drawText();
     drawAxes(750,250,"black",490,490,2);
+    drawCursor(cursor_position[0],cursor_position[1]);
   }
   function drawText(){
     ctx.font = "20px Arial";
@@ -264,9 +280,8 @@ drawFrame();
       if(canvasX>canvas.width/2+seperator_width/2+cursor_radius){
         line_params[0] = map(canvasX,500,1000,-weight_1_space_scale,weight_1_space_scale);
         line_params[1] = map(canvasY,0,500,-weight_2_space_scale,weight_2_space_scale);
-        drawFrame();
-        drawCursor(canvasX,canvasY);
         cursor_position = [canvasX,canvasY];
+        drawFrame();
       }
     }
 }
@@ -297,9 +312,8 @@ function handleMouseDown(event){
   if(canvasX>canvas.width/2+seperator_width/2+cursor_radius){
     line_params[0] = map(canvasX,500,1000,-weight_1_space_scale,weight_1_space_scale);
     line_params[1] = map(canvasY,0,500,-weight_2_space_scale,weight_2_space_scale);
-    drawFrame();
-    drawCursor(canvasX,canvasY);
     cursor_position = [canvasX,canvasY];
+    drawFrame();
   }else{
     var point_position = [0,0];
     point_position[0] = map(canvasX,0,500,-canvas_width_scale,canvas_width_scale);
@@ -307,7 +321,6 @@ function handleMouseDown(event){
     points_arr.push(point_position);
     updateWeightSpace();
     drawFrame();
-    drawCursor(cursor_position[0],cursor_position[1]);
   }
 }
 function handleMouseUp(event){
